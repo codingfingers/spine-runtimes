@@ -153,6 +153,11 @@ static const int quadTriangles[6] = {0, 1, 2, 2, 3, 0};
 	for (int i = 0, n = _skeleton->slotCount; i < n; i++) {
 		spSlot* slot = _skeleton->drawOrder[i];
 		if (!slot->attachment) continue;
+
+        float fraction = (0.0f + ((float)i/(float)n));
+        float zDepthMax = 0.0065f;
+        float depth = zDepthMax * fraction;
+
 		CCTexture *texture = 0;
 		switch (slot->attachment->type) {
 		case SP_ATTACHMENT_REGION: {
@@ -210,8 +215,7 @@ static const int quadTriangles[6] = {0, 1, 2, 2, 3, 0};
 			color.r = _skeleton->r * slot->r * r * multiplier;
 			color.g = _skeleton->g * slot->g * g * multiplier;
 			color.b = _skeleton->b * slot->b * b * multiplier;
-			[batch add:texture vertices:worldVertices uvs:uvs verticesCount:verticesCount
-				triangles:triangles trianglesCount:trianglesCount color:&color];
+			[batch add:texture vertices:worldVertices uvs:uvs verticesCount:verticesCount triangles:triangles trianglesCount:trianglesCount color:&color depth:depth];
 		}
 	}
 	[batch flush];

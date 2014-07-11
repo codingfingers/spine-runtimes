@@ -32,7 +32,7 @@
 
 @interface spPolygonBatch : NSObject {
 	int _capacity;
-	ccV2F_C4B_T2F* _vertices;
+	ccV3F_C4B_T2F* _vertices;
 	int _verticesCount;
 	GLushort* _triangles;
 	int _trianglesCount;
@@ -45,7 +45,7 @@
 
 - (void) add:(CCTexture*)texture vertices:(const float*)vertices uvs:(const float*)uvs
 	verticesCount:(int)verticesCount triangles:(const int*)triangles trianglesCount:(int)trianglesCount
-	color:(ccColor4B*)color;
+	color:(ccColor4B*)color depth:(float)depth;
 - (void) flush;
 
 @end

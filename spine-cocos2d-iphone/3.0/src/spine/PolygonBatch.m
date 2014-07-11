@@ -48,7 +48,7 @@
 	if (!self) return nil;
 
 	_capacity = capacity;
-	_vertices = MALLOC(ccV2F_C4B_T2F, capacity);
+	_vertices = MALLOC(ccV3F_C4B_T2F, capacity);
 	_triangles = MALLOC(GLushort, capacity * 3);
 
 	return self;
@@ -62,7 +62,7 @@
 
 - (void) add:(CCTexture*)addTexture vertices:(const float*)addVertices uvs:(const float*)uvs
 	verticesCount:(int)addVerticesCount triangles:(const int*)addTriangles trianglesCount:(int)addTrianglesCount
-	color:(ccColor4B*)color {
+       color:(ccColor4B*)color depth:(float)depth {
 
 	if (
 		addTexture != _texture
@@ -76,9 +76,10 @@
 		_triangles[_trianglesCount] = addTriangles[i] + _verticesCount;
 
 	for (int i = 0; i < addVerticesCount; i += 2, ++_verticesCount) {
-		ccV2F_C4B_T2F* vertex = _vertices + _verticesCount;
+		ccV3F_C4B_T2F* vertex = _vertices + _verticesCount;
 		vertex->vertices.x = addVertices[i];
 		vertex->vertices.y = addVertices[i + 1];
+        vertex->vertices.z = depth;
 		vertex->colors = *color;
 		vertex->texCoords.u = uvs[i];
 		vertex->texCoords.v = uvs[i + 1];
@@ -92,9 +93,9 @@
 	glEnableVertexAttribArray(kCCVertexAttrib_Position);
 	glEnableVertexAttribArray(kCCVertexAttrib_Color);
 	glEnableVertexAttribArray(kCCVertexAttrib_TexCoords);
-	glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4B_T2F), &_vertices[0].vertices);
-	glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ccV2F_C4B_T2F), &_vertices[0].colors);
-	glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, sizeof(ccV2F_C4B_T2F), &_vertices[0].texCoords);
+	glVertexAttribPointer(kCCVertexAttrib_Position, 3, GL_FLOAT, GL_FALSE, sizeof(ccV3F_C4B_T2F), &_vertices[0].vertices);
+	glVertexAttribPointer(kCCVertexAttrib_Color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ccV3F_C4B_T2F), &_vertices[0].colors);
+	glVertexAttribPointer(kCCVertexAttrib_TexCoords, 2, GL_FLOAT, GL_FALSE, sizeof(ccV3F_C4B_T2F), &_vertices[0].texCoords);
 	glDrawElements(GL_TRIANGLES, _trianglesCount, GL_UNSIGNED_SHORT, _triangles);
 
 	_verticesCount = 0;
